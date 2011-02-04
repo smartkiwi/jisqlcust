@@ -409,14 +409,14 @@ public class DefaultFormatterTwo implements JisqlFormatter {
         }
 	}
 
-	@Override
+	//@Override
 	public void formatString(PrintStream out, String str) throws Exception {
 		writeToOutLn(str);
 		out.println(str);
 		
 	}
 
-	@Override
+	//@Override
 	public void doClose() throws Exception {
 		if (useroutputfile)
 			closeOutFile();		

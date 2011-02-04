@@ -144,12 +144,12 @@ public class CSVFormatter implements JisqlFormatter {
     public void formatFooter( PrintStream out, ResultSetMetaData metaData ) throws Exception {
     }
 
-	@Override
+	//@Override
 	public void formatString(PrintStream out, String str) throws Exception {
 		out.println(str);		
 	}
 
-	@Override
+	//@Override
 	public void doClose() throws Exception {
 		// TODO Auto-generated method stub
 		

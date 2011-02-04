@@ -109,13 +109,13 @@ public class XMLFormatter implements JisqlFormatter {
     public void formatFooter( PrintStream out, ResultSetMetaData metaData ) throws Exception {
     }
 
-	@Override
+	//@Override
 	public void formatString(PrintStream out, String str) throws Exception {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+	//@Override
 	public void doClose() throws Exception {
 		// TODO Auto-generated method stub
 		

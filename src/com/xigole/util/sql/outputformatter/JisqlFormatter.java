@@ -75,4 +75,20 @@ public interface JisqlFormatter {
      * 
      */
     public void formatFooter( PrintStream out, ResultSetMetaData metaData ) throws Exception;
+
+    /**
+     * Outputs a string
+     *
+     * @param out where to put footer output.
+     * @param String
+     * 
+     */
+    public void formatString( PrintStream out, String str ) throws Exception;
+
+    /**
+     * Perform close actions
+     *
+     * 
+     */
+    public void doClose(  ) throws Exception;
 }

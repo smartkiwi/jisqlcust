@@ -323,4 +323,15 @@ public class DefaultFormatter implements JisqlFormatter {
             return returnValue.toString();
         }
 	}
+
+	@Override
+	public void formatString(PrintStream out, String str) throws Exception {
+		out.println(str);		
+	}
+
+	@Override
+	public void doClose() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -228,7 +228,7 @@ public class Jisql {
     private static final String mySQLConnectJDriverName = "com.mysql.jdbc.Driver";
     private static final String mySQLCauchoDriverName = "com.caucho.jdbc.mysql.Driver";
 
-    private static final String defaultFormatterClassName = "com.xigole.util.sql.outputformatter.DefaultFormatter";
+    private static final String defaultFormatterClassName = "com.xigole.util.sql.outputformatter.DefaultFormatterTwo";
     private static final String csvFormatterClassName = "com.xigole.util.sql.outputformatter.CSVFormatter";
     private static final String xmlFormatterClassName = "com.xigole.util.sql.outputformatter.XMLFormatter";
 
@@ -248,6 +248,7 @@ public class Jisql {
     private Properties props = null;
     private String inputFileName = null;
     private String commandTerminator = "go";
+
     private String inputQuery = null;
 
     /**
@@ -276,7 +277,12 @@ public class Jisql {
 
         System.exit(0);
     }
+    
+    
 
+    /**
+     * @throws Exception
+     */
     public void run() throws Exception {
 
         try {
@@ -292,7 +298,9 @@ public class Jisql {
                 printDriverInfo();
             }
             else {
+
                 doIsql();
+                formatter.doClose();                
             }
         }
         catch (SQLException sqle) {
@@ -336,6 +344,7 @@ public class Jisql {
         ResultSet resultSet = null;
         ResultSetMetaData resultSetMetaData = null;
         StringBuffer query = null;
+        
 
         if (inputFileName != null) {
             try {
@@ -401,6 +410,7 @@ public class Jisql {
 
                 if (printDebug)
                     System.out.println("executing: " + query.toString());
+                formatter.formatString(System.out, "executing: " + query.toString());
 
                 boolean moreResults = statement.execute(query.toString());
                 int rowsAffected = 0;
@@ -417,11 +427,14 @@ public class Jisql {
                         formatter.formatHeader(System.out, resultSetMetaData);
                         formatter.formatData(System.out, resultSet, resultSetMetaData);
                         formatter.formatFooter(System.out, resultSetMetaData);
+                        
+
+                        
 
                         int rowsSelected = statement.getUpdateCount();
 
                         if (rowsSelected >= 0) {
-                            System.out.println(rowsSelected + " rows affected.");
+                        	formatter.formatString(System.out,rowsSelected + " rows affected.");
                         }
                     }
                     else {
@@ -429,7 +442,7 @@ public class Jisql {
                         printAllExceptions(statement.getWarnings());
                         statement.clearWarnings();
                         if (rowsAffected >= 0) {
-                            System.out.println(rowsAffected + " rows affected.");
+                        	formatter.formatString(System.out,rowsAffected + " rows affected.");
                         }
                     }
 
@@ -526,6 +539,7 @@ public class Jisql {
             formatterClassName = xmlFormatterClassName;
         else if (formatterClassName.compareToIgnoreCase("default") == 0)
             formatterClassName = defaultFormatterClassName;
+        System.out.println("selected formatter class: "+formatterClassName);
 
         formatter = (JisqlFormatter) Class.forName(formatterClassName).newInstance();
 
@@ -546,6 +560,7 @@ public class Jisql {
         parser.accepts("query").withRequiredArg().ofType(String.class);
         parser.accepts("user").withRequiredArg().ofType(String.class);
         parser.accepts("u").withRequiredArg().ofType(String.class);
+
 
         formatter.setSupportedOptions(parser);
 
@@ -592,6 +607,8 @@ public class Jisql {
 
         if (options.has("debug"))
             printDebug = true;
+
+        
 
         if (options.has("user"))
             userName = (String) options.valueOf("user");

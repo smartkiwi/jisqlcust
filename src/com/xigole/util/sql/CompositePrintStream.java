@@ -86,7 +86,7 @@ public class CompositePrintStream extends OutputStream {
 	//@Override
 	public void write(int arg0) throws IOException {
 		// TODO Auto-generated method stub
-		//stub
+		System.out.println("write int: "+arg0);
 		
 	}
 

@@ -1,11 +1,14 @@
 package com.xigole.util.sql;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.Driver;
@@ -240,6 +243,8 @@ public class Jisql {
     private String formatterClassName = defaultFormatterClassName;
 
     private JisqlFormatter formatter = null;
+    
+    private CompositePrintStream outStreams = null;
 
     private Connection connection = null;
     private boolean printDebug = false;
@@ -251,12 +256,17 @@ public class Jisql {
 
     private String inputQuery = null;
 
+    private String outputfile = "outfile.log";
+    private Boolean useroutputfile = false;
+
+    
     /**
      * Runs Jisql with the command line arguments provided.
      * 
      */
     public static void main(String argv[]) {
         Jisql jisql = new Jisql();
+        
 
         try {
             jisql.parseArgs(argv);
@@ -410,7 +420,7 @@ public class Jisql {
 
                 if (printDebug)
                     System.out.println("executing: " + query.toString());
-                formatter.formatString(System.out, "executing: " + query.toString());
+                formatter.formatString(outStreams, "executing: " + query.toString());
 
                 boolean moreResults = statement.execute(query.toString());
                 int rowsAffected = 0;
@@ -424,9 +434,9 @@ public class Jisql {
                         resultSet.clearWarnings();
                         resultSetMetaData = resultSet.getMetaData();
 
-                        formatter.formatHeader(System.out, resultSetMetaData);
-                        formatter.formatData(System.out, resultSet, resultSetMetaData);
-                        formatter.formatFooter(System.out, resultSetMetaData);
+                        formatter.formatHeader(outStreams, resultSetMetaData);
+                        formatter.formatData(outStreams, resultSet, resultSetMetaData);
+                        formatter.formatFooter(outStreams, resultSetMetaData);
                         
 
                         
@@ -434,7 +444,7 @@ public class Jisql {
                         int rowsSelected = statement.getUpdateCount();
 
                         if (rowsSelected >= 0) {
-                        	formatter.formatString(System.out,rowsSelected + " rows affected.");
+                        	formatter.formatString(outStreams,rowsSelected + " rows affected.");
                         }
                     }
                     else {
@@ -442,7 +452,7 @@ public class Jisql {
                         printAllExceptions(statement.getWarnings());
                         statement.clearWarnings();
                         if (rowsAffected >= 0) {
-                        	formatter.formatString(System.out,rowsAffected + " rows affected.");
+                        	formatter.formatString(outStreams,rowsAffected + " rows affected.");
                         }
                     }
 
@@ -509,6 +519,25 @@ public class Jisql {
         System.out.println("metaData.getDriverName(): \"" + metaData.getDriverName() + "\"");
         System.out.println("metaData.getDriverVersion(): \"" + metaData.getDriverVersion() + "\"");
     }
+    
+    
+    
+    /**
+     * opens BufferedWriter to file
+     */
+    public PrintStream openOutFile() {
+        try {
+        	System.out.println("using output file: "+outputfile);
+        	FileOutputStream fwo = new FileOutputStream( outputfile, true );
+        	BufferedOutputStream bwo = new BufferedOutputStream( fwo );
+        	return new PrintStream( bwo );
+        } catch( IOException ioexception )
+        {
+            ioexception.printStackTrace( );
+        }
+		return null;
+    }
+    
 
     /**
      * Parse the command line arguments. This method parses what is needed for
@@ -542,6 +571,8 @@ public class Jisql {
         System.out.println("selected formatter class: "+formatterClassName);
 
         formatter = (JisqlFormatter) Class.forName(formatterClassName).newInstance();
+        
+        outStreams = new CompositePrintStream(System.out);
 
         OptionParser parser = new OptionParser();
         parser.posixlyCorrect(false);
@@ -560,6 +591,7 @@ public class Jisql {
         parser.accepts("query").withRequiredArg().ofType(String.class);
         parser.accepts("user").withRequiredArg().ofType(String.class);
         parser.accepts("u").withRequiredArg().ofType(String.class);
+        parser.accepts("outfile").withRequiredArg().ofType(String.class);
 
 
         formatter.setSupportedOptions(parser);
@@ -640,6 +672,13 @@ public class Jisql {
 
         if (userName == null)
             throw new Exception("user name must exist");
+        
+        if (options.has("outfile")) {
+            useroutputfile = true;
+        	outputfile = (String) options.valueOf("outfile");
+        	outStreams.addStream(openOutFile());
+        }
+
 
         if ((password == null) && (passwordFileName == null)) {
             password = getPassword("Password (hit enter for no password): ");

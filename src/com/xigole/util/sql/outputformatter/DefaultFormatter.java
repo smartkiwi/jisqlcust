@@ -4,6 +4,8 @@ import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 
+import com.xigole.util.sql.CompositePrintStream;
+
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 
@@ -106,6 +108,18 @@ public class DefaultFormatter implements JisqlFormatter {
         out.println("\t-debug shows extra information about the output." );
 
     }
+    
+    public void usage( CompositePrintStream out ) {
+        out.println("\t-w specifies the maximum field width for a column.  The default is to output the full width of the column");
+        out.println("\t-spacer changes the spacer between columns from a single space to the first character of the argument");
+        out.println("\t-noheader do not print any header columns");
+        out.println("\t-left left justify the output");
+        out.println("\t-trim trim the data output.  This is useful when specifying a delimiter.");
+        out.println("\t-nonull print the empty string instead of the word \"NULL\" for null values.");
+        out.println("\t-debug shows extra information about the output." );
+
+    }
+    
 
     /**
      * Outputs a header for a query.  For the DefaultFormatter the data is output
@@ -115,7 +129,7 @@ public class DefaultFormatter implements JisqlFormatter {
      * @param metaData - the ResultSetMetaData for the output.
      *
      */
-    public void formatHeader( PrintStream out, ResultSetMetaData metaData ) throws Exception {
+    public void formatHeader( CompositePrintStream out, ResultSetMetaData metaData ) throws Exception {
         if( printHeader ) {
             int numColumns = metaData.getColumnCount();
 
@@ -163,7 +177,7 @@ public class DefaultFormatter implements JisqlFormatter {
      *
      *
      */
-    public void formatData( PrintStream out, ResultSet resultSet, ResultSetMetaData metaData ) throws Exception {
+    public void formatData( CompositePrintStream out, ResultSet resultSet, ResultSetMetaData metaData ) throws Exception {
 
         while( resultSet.next() ) {
             int numColumns = metaData.getColumnCount();
@@ -188,7 +202,7 @@ public class DefaultFormatter implements JisqlFormatter {
      * @param metaData the ResultSetMetaData for the output.
      *
      */
-    public void formatFooter( PrintStream out, ResultSetMetaData metaData ) throws Exception {
+    public void formatFooter( CompositePrintStream out, ResultSetMetaData metaData ) throws Exception {
     }
 
 
@@ -325,7 +339,7 @@ public class DefaultFormatter implements JisqlFormatter {
 	}
 
 	//@Override
-	public void formatString(PrintStream out, String str) throws Exception {
+	public void formatString(CompositePrintStream out, String str) throws Exception {
 		out.println(str);		
 	}
 

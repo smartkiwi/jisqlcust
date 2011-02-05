@@ -4,6 +4,8 @@ import java.io.PrintStream;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 
+import com.xigole.util.sql.CompositePrintStream;
+
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 
@@ -43,6 +45,16 @@ public interface JisqlFormatter {
      * @param out where to put the usage message.
      *
      */
+    public void usage( CompositePrintStream out );
+    
+    
+    /**
+     * Called to output a usage message to the command line window.  This
+     * message should contain information on how to call the formatter.
+     *
+     * @param out where to put the usage message. (usually used for System.err)
+     *
+     */
     public void usage( PrintStream out );
 
     
@@ -54,7 +66,7 @@ public interface JisqlFormatter {
      * @param metaData the ResultSetMetaData for the output.
      *  
      */
-    public void formatHeader( PrintStream out, ResultSetMetaData metaData ) throws Exception;
+    public void formatHeader( CompositePrintStream out, ResultSetMetaData metaData ) throws Exception;
 
     /**
      * Called to output the data.
@@ -64,7 +76,7 @@ public interface JisqlFormatter {
      * @param metaData the ResultSetMetaData for the row.
      *
      */
-    public void formatData( PrintStream out, ResultSet resultSet, ResultSetMetaData metaData ) throws Exception;
+    public void formatData( CompositePrintStream out, ResultSet resultSet, ResultSetMetaData metaData ) throws Exception;
 
     /**
      * Outputs a footer for a query.  This is called after all data has been
@@ -74,7 +86,7 @@ public interface JisqlFormatter {
      * @param metaData the ResultSetMetaData for the output.
      * 
      */
-    public void formatFooter( PrintStream out, ResultSetMetaData metaData ) throws Exception;
+    public void formatFooter( CompositePrintStream out, ResultSetMetaData metaData ) throws Exception;
 
     /**
      * Outputs a string
@@ -83,7 +95,7 @@ public interface JisqlFormatter {
      * @param String
      * 
      */
-    public void formatString( PrintStream out, String str ) throws Exception;
+    public void formatString( CompositePrintStream out, String str ) throws Exception;
 
     /**
      * Perform close actions

@@ -1,0 +1,9 @@
+jisql-custom
+based on 
+
+http://www.xigole.com/software/jisql/jisql.jsp
+
+Platform independent tool to provide command line interface to databases such as
+* Oracle
+* Sybase
+* any otherJDBC database

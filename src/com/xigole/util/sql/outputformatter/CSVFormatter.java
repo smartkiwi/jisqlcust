@@ -10,6 +10,7 @@ import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 
 import com.csvreader.CsvWriter;
+import com.xigole.util.sql.CompositePrintStream;
 
 
 /**
@@ -77,6 +78,19 @@ public class CSVFormatter implements JisqlFormatter {
     }
 
     /**
+     * Called to output a usage message to the command line window.  This
+     * message should contain information on how to call the formatter.
+     *
+     * @param out the PrintStream to display the usage message on.
+     * 
+     */
+    public void usage( CompositePrintStream out ) {
+        out.println("\t-delimiter specifies the character to use as the delimiter.  This defaults to \"" + delimiter + "\"" );
+        out.println("\t-colnames outputs column names.  By default there are no column names." );
+    }
+    
+    
+    /**
      * Outputs an optional header for the CSV data.  This header is only enabled
      * if the &quot;colnames&quot; parameter is included.
      *
@@ -84,7 +98,7 @@ public class CSVFormatter implements JisqlFormatter {
      * @param metaData the ResultSetMetaData for the output.
      *
      */
-    public void formatHeader( PrintStream out, ResultSetMetaData metaData ) throws Exception {
+    public void formatHeader( CompositePrintStream out, ResultSetMetaData metaData ) throws Exception {
         if( includeColumnNames ) {
             int numColumns = metaData.getColumnCount();
 
@@ -112,7 +126,7 @@ public class CSVFormatter implements JisqlFormatter {
      *
      *
      */
-    public void formatData( PrintStream out, ResultSet resultSet, ResultSetMetaData metaData ) throws Exception {
+    public void formatData( CompositePrintStream out, ResultSet resultSet, ResultSetMetaData metaData ) throws Exception {
     	
     	CsvWriter csvWriter = new CsvWriter( out, delimiter, Charset.forName( "us-ascii" )  );
     	
@@ -141,11 +155,11 @@ public class CSVFormatter implements JisqlFormatter {
      * @param metaData the ResultSetMetaData for the output.
      *
      */
-    public void formatFooter( PrintStream out, ResultSetMetaData metaData ) throws Exception {
+    public void formatFooter( CompositePrintStream out, ResultSetMetaData metaData ) throws Exception {
     }
 
 	//@Override
-	public void formatString(PrintStream out, String str) throws Exception {
+	public void formatString(CompositePrintStream out, String str) throws Exception {
 		out.println(str);		
 	}
 

@@ -1,5 +1,7 @@
 package com.xigole.util.sql;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +13,7 @@ import java.util.List;
  * @author vvlad
  *
  */
-public class CompositePrintStream {
+public class CompositePrintStream extends OutputStream {
 	
 	List<PrintStream> streamsList = new ArrayList<PrintStream>();
 	
@@ -79,6 +81,19 @@ public class CompositePrintStream {
 		for (PrintStream stream : streamsList) {
 			stream.close();
 		}				
+	}
+
+	//@Override
+	public void write(int arg0) throws IOException {
+		// TODO Auto-generated method stub
+		//stub
+		
+	}
+
+	public void print(char delimiter) {
+		for (PrintStream stream : streamsList) {
+			stream.print(delimiter);
+		}		
 	}	
 	
 	

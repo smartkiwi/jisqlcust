@@ -5,6 +5,8 @@ import java.nio.charset.Charset;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 
+import com.xigole.util.sql.CompositePrintStream;
+
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 
@@ -47,10 +49,21 @@ public class XMLFormatter implements JisqlFormatter {
      *  a no-op.
      *
      */
-    public void usage( PrintStream out ) {
+    public void usage( CompositePrintStream out ) {
     	/* no options for the XMLFormatter */
     }
+
     
+    /**
+     * Called to output a usage message to the command line window.  This
+     * message should contain information on how to call the formatter.
+     * There are no options to set for the XMLFormatter so this method is
+     *  a no-op.
+     *
+     */
+    public void usage( PrintStream out ) {
+    	/* no options for the XMLFormatter */
+    }    
 
     /**
      * Outputs a header for a query.  For the XMLFormater this outputs the XML
@@ -61,7 +74,7 @@ public class XMLFormatter implements JisqlFormatter {
      * @param metaData the ResultSetMetaData for the output.
      *
      */
-    public void formatHeader( PrintStream out, ResultSetMetaData metaData ) throws Exception {
+    public void formatHeader( CompositePrintStream out, ResultSetMetaData metaData ) throws Exception {
     	out.print( "<?xml version=\"1.0\" encoding=\"" );
     	out.print( Charset.defaultCharset().displayName().toLowerCase() );
         out.println( "\" ?>" );
@@ -77,7 +90,7 @@ public class XMLFormatter implements JisqlFormatter {
      * @param metaData the ResultSetMetaData for the row.
      *
      */
-    public void formatData( PrintStream out, ResultSet resultSet, ResultSetMetaData metaData ) throws Exception {
+    public void formatData( CompositePrintStream out, ResultSet resultSet, ResultSetMetaData metaData ) throws Exception {
         	
         while( resultSet.next() ) {
             int numColumns = metaData.getColumnCount();
@@ -106,11 +119,11 @@ public class XMLFormatter implements JisqlFormatter {
      * @param metaData the ResultSetMetaData for the output.
      *
      */
-    public void formatFooter( PrintStream out, ResultSetMetaData metaData ) throws Exception {
+    public void formatFooter( CompositePrintStream out, ResultSetMetaData metaData ) throws Exception {
     }
 
 	//@Override
-	public void formatString(PrintStream out, String str) throws Exception {
+	public void formatString(CompositePrintStream out, String str) throws Exception {
 		// TODO Auto-generated method stub
 		
 	}

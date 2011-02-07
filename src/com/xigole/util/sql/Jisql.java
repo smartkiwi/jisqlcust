@@ -282,9 +282,11 @@ public class Jisql {
         }
         catch (Exception e) {
             e.printStackTrace();
+            jisql.outStreams.close();
             System.exit(1);
         }
 
+        jisql.outStreams.close();
         System.exit(0);
     }
     

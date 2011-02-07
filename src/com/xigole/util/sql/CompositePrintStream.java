@@ -78,8 +78,13 @@ public class CompositePrintStream extends OutputStream {
 	 * 
 	 */
 	public void close() {
+		System.out.println("closing output streams");
 		for (PrintStream stream : streamsList) {
-			stream.close();
+			try {
+				stream.close();
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
 		}				
 	}
 
@@ -95,7 +100,19 @@ public class CompositePrintStream extends OutputStream {
 		for (PrintStream stream : streamsList) {
 			stream.print(delimiter);
 		}		
+	}
+
+	//@Override
+	public void flush() throws IOException {
+		// TODO Auto-generated method stub
+		//super.flush();
+		System.out.println("flushing output streams");
+		for (PrintStream stream : streamsList) {
+			stream.flush();
+		}		
+		
 	}	
+	
 	
 	
 }

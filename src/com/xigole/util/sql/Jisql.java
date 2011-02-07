@@ -234,6 +234,8 @@ public class Jisql {
     private static final String defaultFormatterClassName = "com.xigole.util.sql.outputformatter.DefaultFormatter";
     private static final String csvFormatterClassName = "com.xigole.util.sql.outputformatter.CSVFormatter";
     private static final String xmlFormatterClassName = "com.xigole.util.sql.outputformatter.XMLFormatter";
+    private static final String simpleCsvFormatterClassName = "com.xigole.util.sql.outputformatter.SimpleCsvFormatter";
+    
 
     private String driverName = null;
     private String connectString = null;
@@ -564,6 +566,8 @@ public class Jisql {
             }
         }
 
+        if (formatterClassName.compareToIgnoreCase("simplecsv") == 0)
+            formatterClassName = simpleCsvFormatterClassName;
         if (formatterClassName.compareToIgnoreCase("csv") == 0)
             formatterClassName = csvFormatterClassName;
         else if (formatterClassName.compareToIgnoreCase("xml") == 0)

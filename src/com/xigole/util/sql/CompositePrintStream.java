@@ -81,6 +81,7 @@ public class CompositePrintStream extends OutputStream {
 		System.out.println("closing output streams");
 		for (PrintStream stream : streamsList) {
 			try {
+				System.out.println("stream: " + stream.getClass().getName());
 				stream.close();
 			} catch (Throwable e) {
 				e.printStackTrace();
